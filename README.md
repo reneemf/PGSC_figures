@@ -4,7 +4,7 @@ Scripts to reproduce the figures in the PGSC manuscript.
 
 📄 **Manuscript:** [TITLE](MANUSCRIPT_URL) 
 
-The pipeline that builds the underlying scores (GXC GWAS, PGSC, bootstrapped R², etc.) is in the companion method repository [here](repo_URL).
+The pipeline that builds the underlying scores (GXC GWAS, PGSC, bootstrapped R², etc.) is in the companion method repository [here](https://github.com/reneemf/PGSC).
 
 Three methods are compared throughout: **PGS** (additive baseline), **ampPGS** (genome-wide amplification), and **PGSC** (locus-specific GxC), across 48 UKB traits, three contexts (sex, age, statins), and three populations (European, African, Asian).
 
@@ -18,7 +18,7 @@ install.packages(c("ggplot2", "ggrepel", "gridExtra", "grid", "stringr", "plotri
 
 ## Input data
 
-UK Biobank and BioMe data are access-controlled, so this repo ships code plus the tables in `Supp_tables/` only. Supply your own outputs (produced by [PGSC_repo](repo_URL)) and update `data_dir` in [`config.R`](config.R) accordingly.
+UK Biobank and BioMe data are access-controlled, so this repo ships code plus the tables in `Supp_tables/` only. Supply your own outputs (produced by [PGSC](https://github.com/reneemf/PGSC)) and update `data_dir` in [`config.R`](config.R) accordingly.
 
 ## Run
 
