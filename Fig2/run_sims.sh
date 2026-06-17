@@ -18,21 +18,21 @@ module load R/4.3.1
 # Map array task ID to iteration index
 iter_idx="${SLURM_ARRAY_TASK_ID}"
 
-# h2_coord and h2_gxe: no GxC-background split (~20gb)
-#echo "Running: Rscript h2_coord.R ${iter_idx}"
-#Rscript h2_coord.R "${iter_idx}"
-#echo "Running: Rscript h2_gxe.R ${iter_idx}"
-#Rscript h2_gxe.R "${iter_idx}"
+# h2_coord and h2_gxe: no GxC-background split
+echo "Running: Rscript h2_coord.R ${iter_ißdx}"
+Rscript h2_coord.R "${iter_idx}"
+echo "Running: Rscript h2_gxe.R ${iter_idx}"
+Rscript h2_gxe.R "${iter_idx}"
 
-# h2, pop, poly, lam_box, eta: w GxC-background split (~ 70gb)
-#echo "Running: Rscript h2.R ${iter_idx}"
-#Rscript h2.R "${iter_idx}"
-#echo "Running: Rscript pop.R ${iter_idx}"
-#Rscript pop.R "${iter_idx}"
-#echo "Running: Rscript poly.R ${iter_idx}"
-#Rscript poly.R "${iter_idx}"
-#echo "Running: Rscript lam_box.R ${iter_idx}"
-#Rscript lam_box.R "${iter_idx}"
+# h2, pop, poly, lam_box, eta: w GxC-background split
+echo "Running: Rscript h2.R ${iter_idx}"
+Rscript h2.R "${iter_idx}"
+echo "Running: Rscript pop.R ${iter_idx}"
+Rscript pop.R "${iter_idx}"
+echo "Running: Rscript poly.R ${iter_idx}"
+Rscript poly.R "${iter_idx}"
+echo "Running: Rscript lam_box.R ${iter_idx}"
+Rscript lam_box.R "${iter_idx}"
 echo "Running: Rscript alpha.R ${iter_idx}"
 Rscript alpha.R "${iter_idx}"
 echo "Running: Rscript eta.R ${iter_idx}"
