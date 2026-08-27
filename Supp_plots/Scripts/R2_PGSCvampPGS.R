@@ -48,6 +48,21 @@ for(pop in valid_pops){
                 pheno_cleaner(rownames(data_matrix)),
                 context_mapping[[context]]$clean_context, pop, context )
 
+    # print stuff:
+    if(context == "sex" && pop == "white_euro"){
+      print(paste0("P-values (avg R2% change vs 0) — ", context, " | ", pop))
+      print(round(pvals, digits=2))
+      print(pvals)
+      print(paste0("# traits: ", length(data_matrix[-c(1,2),2])))
+      print("avg R2 %Change: ")
+      print(data_matrix["avg_r2s",])
+      print("top PGSC R2 %Change: ")
+      print(tail(data_matrix[,"PGSC_v_ampPGS"],n=4))
+      print(paste0("# PGSC sig: ", length(CI25_matrix[CI25_matrix[,"PGSC_v_ampPGS"] > 0,"PGSC_v_ampPGS"])))
+      print(paste0("# ampPGS sig: ", length(CI75_matrix[CI75_matrix[,"PGSC_v_ampPGS"] < 0,"PGSC_v_ampPGS"])))
+      print("PGSC underperforms ampPGS: ")
+      print(CI75_matrix[CI75_matrix[,"PGSC_v_ampPGS"] < 0,])
+
     }
   }
 }

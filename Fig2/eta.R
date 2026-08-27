@@ -10,7 +10,7 @@ args <- commandArgs(trailingOnly = TRUE)
 j <- as.integer(args[1])
 
 gxe_values <- c(0, 0.05)
-eta_values <- seq(0, 2, length = tuner)
+eta_values <- 10^seq(-2, 2, length = tuner+1)
 
 # per-iteration output file
 dir.create('Rdata/eta/', showWarnings=FALSE)

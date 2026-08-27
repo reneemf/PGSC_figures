@@ -60,57 +60,79 @@ for(context in context_list){
 # build h2 gxe & het plot
 panel_labels <- paste0("(", LETTERS[1:6], ")")
 
-png("R2perdiffvgxe_het.png", width = 24, height = 16, units = 'in', res = 300)
-par(mfrow = c(2, 3), mai = c(0.75,1,0.5,0.2))
-for (i in seq_along(context_list)) {
-  context   <- context_list[i]
-  merged_df <- merged_list[[context]]
-  plot((merged_df$h2gxe), merged_df[,"PGSC_v_pgs"],
-       xlim=range((merged_df$h2gxe)), ylim=range(merged_df[,c("PGSC_v_pgs","ampPGS")]),
-       xlab="", ylab="", col=base_cols["PGSC_v_pgs"],
-       pch=16, cex=4, cex.axis = 2.5)
-  title(xlab = "GxC heritability", cex.lab = 3.5, line = 4)
-  points((merged_df$h2gxe), merged_df[,"ampPGS"], col=base_cols["ampPGS"], pch=16, cex=4)
-  abline(h=0, col="black")
-  abline(v=0, col="black")
-  mtext(panel_labels[i], side=3, adj=0.01, line = -2.8, cex=2, font=1)
-  PGSC_cor   <- cor.test(merged_df[,"PGSC_v_pgs"], merged_df$h2gxe, method = "pearson")
-  ampPGS_cor <- cor.test(merged_df[,"ampPGS"],     merged_df$h2gxe, method = "pearson")
-  legend('topright', bty='n', c(context_mapping[[context]]$clean_context,
-                                 cor_label("PGSC",   PGSC_cor),
-                                 cor_label("ampPGS", ampPGS_cor)), cex=3)
-  if (context == "sex") {
-    title(ylab = paste0("R\u00b2 %Change ", Ancs[1], " population"), cex.lab = 3.5, line = 4)
-    legend("right", legend = c("PGSC","ampPGS"), bty="n",
-           col = base_cols[c("PGSC_v_pgs","ampPGS")], pch = c(16,16), cex=3)
+box_side   <- 6.8
+mai_bottom <- 1.2; mai_left <- 1.5; mai_right <- 0.45
+mai_top    <- 1.3
+col_width  <- box_side + mai_left + mai_right
+row_height <- box_side + mai_top + mai_bottom
+title_width <- col_width - 0.4
+
+cex_lab    <- 4
+cex_axis   <- 3.5
+cex_panel  <- 2
+cex_cor    <- 1.9
+cex_legend <- 3.5
+cex_pts    <- 4
+panel_lwd  <- 3.5
+
+fit_cex_main <- function(label, target = title_width, cap = cex_lab, font = 1) {
+  min(cap, target / strwidth(label, units = "inches", cex = 1, font = font))
+}
+
+draw_gxe_het_panel <- function(merged_df, xvals, xlab_str, panel_label,
+                                context_label = NULL, show_ylab = FALSE,
+                                show_legend = FALSE) {
+  plot(xvals, merged_df[, "PGSC_v_pgs"],
+       xlim = range(xvals), ylim = range(merged_df[, c("PGSC_v_pgs", "ampPGS")]),
+       xlab = "", ylab = "", col = base_cols["PGSC_v_pgs"], pch = 16, cex = cex_pts, cex.axis = cex_axis)
+  points(xvals, merged_df[, "ampPGS"], col = base_cols["ampPGS"], pch = 16, cex = cex_pts)
+  abline(h = 0, col = "black")
+  abline(v = 0, col = "black")
+  title(xlab = xlab_str, cex.lab = cex_lab, line = 7)
+
+  PGSC_cor   <- cor.test(merged_df[, "PGSC_v_pgs"], xvals, method = "pearson")
+  ampPGS_cor <- cor.test(merged_df[, "ampPGS"],     xvals, method = "pearson")
+  cor_line   <- paste(cor_label("PGSC", PGSC_cor), cor_label("ampPGS", ampPGS_cor), sep = "; ")
+
+  if (!is.null(context_label)) {
+    title(main = context_label, cex.main = fit_cex_main(context_label), font.main = 1, line = 5)
+  }
+  mtext(cor_line, side = 3, line = 1.2, cex = cex_cor, font = 1)
+
+  if (show_ylab) {
+    title(ylab = paste0("R\u00b2 %Change ", Ancs[1], " population"), cex.lab = cex_lab, line = 7)
+    if (show_legend) {
+      legend("right", legend = c("PGSC", "ampPGS"), bty = "n",
+             col = base_cols[c("PGSC_v_pgs", "ampPGS")], pch = c(16, 16), cex = cex_legend)
+    }
   }
 }
 
-# het
+png("R2perdiffvgxe_het.png", width = 3 * col_width, height = 2 * row_height, units = 'in', res = 300)
+layout(matrix(1:6, nrow = 2, ncol = 3, byrow = TRUE),
+       widths = rep(col_width, 3), heights = c(row_height, row_height))
+
+par(mai = c(mai_bottom, mai_left, mai_top, mai_right), lwd = panel_lwd, tcl=-0.8, mgp=c(3,2.5,0))
 for (i in seq_along(context_list)) {
   context   <- context_list[i]
   merged_df <- merged_list[[context]]
-  plot(abs(merged_df$h2nxe), merged_df[,"PGSC_v_pgs"],
-       xlim=range(abs(merged_df$h2nxe)), ylim=range(merged_df[,c("PGSC_v_pgs","ampPGS")]),
-       xlab="", ylab="", col=base_cols["PGSC_v_pgs"],
-       pch=16, cex=4, cex.axis = 2.5)
-  title(xlab = "Heteroskedasticity", cex.lab = 3.5, line = 4)
-  points(abs(merged_df$h2nxe), merged_df[,"ampPGS"], col=base_cols["ampPGS"], pch=16, cex=4)
-  abline(h=0, col="black")
-  abline(v=0, col="black")
-  mtext(panel_labels[i + length(context_list)], side=3, adj=0.01, line = -2.8, cex=2, font=1)
-  PGSC_cor   <- cor.test(merged_df[,"PGSC_v_pgs"], abs(merged_df[,'h2nxe']), method = "pearson")
-  ampPGS_cor <- cor.test(merged_df[,"ampPGS"],     abs(merged_df[,'h2nxe']), method = "pearson")
-  if (context == "sex") {
-    title(ylab = paste0("R\u00b2 %Change ", Ancs[1], " population"), cex.lab = 3.5, line = 4.5)
-  }
-  legend('topright', bty='n', c(cor_label("PGSC",   PGSC_cor),
-                                 cor_label("ampPGS", ampPGS_cor)), cex=3)
+  draw_gxe_het_panel(merged_df, merged_df$h2gxe, "GxC heritability", panel_labels[i],
+                      context_label = context_mapping[[context]]$clean_context,
+                      show_ylab = (context == "sex"), show_legend = TRUE)
+}
+
+par(mai = c(mai_bottom, mai_left, mai_top, mai_right), lwd = panel_lwd, tcl=-0.8, mgp=c(3,2.5,0))
+for (i in seq_along(context_list)) {
+  context   <- context_list[i]
+  merged_df <- merged_list[[context]]
+  draw_gxe_het_panel(merged_df, abs(merged_df$h2nxe), "Heteroskedasticity",
+                      panel_labels[i + length(context_list)],
+                      show_ylab = (context == "sex"))
 }
 dev.off()
 
 png("Rhos_combined_we.png", width = 24, height = 16, units = 'in', res = 300)
-par(mfrow = c(2, 3), mai = c(0.75,1,0.75,0.5))
+par(mfrow = c(2, 3), mai = c(0.5,1,0.75,0.5))
 # Top row: Rhos v gxe (GxC h2)
 for (i in seq_along(context_list)) {
   context   <- context_list[i]

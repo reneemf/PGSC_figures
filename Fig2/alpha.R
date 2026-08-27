@@ -11,7 +11,7 @@ args <- commandArgs(trailingOnly = TRUE)
 j <- as.integer(args[1])
 
 gxe_values <- c(0, 0.05)
-alpha_values <- seq(0.05,1, length = tuner) #alpha^2 vals
+alpha_values <- seq(0,5,length = tuner)
 LB_values <- c(0,1,2)
 
 # per-iteration output file

@@ -10,14 +10,14 @@ PGSC_HOME <- Sys.getenv("PGSC_HOME", unset = ".")
 # pop_counts/  per-context individual counts per population
 # GENIE/       external GENIE results
 data_dir  <- "/path/to/PGSC_data/"
-# BioMe replication results, also user-supplied and not in this repo.
-BioMe_dir <- paste0(data_dir, "BioMe_updated_results/")
+# MSM replication results, also user-supplied and not in this repo.
+MSM_dir <- paste0(data_dir, "MSM_updated_results/")
 
 # Derived paths, no need to edit.
 home_dir        <- data_dir
 fig_dir         <- paste0(PGSC_HOME, "/")
 rdata_dir       <- paste0(PGSC_HOME, "/Rdata/")
-BioMe_input_dir <- paste0(BioMe_dir, "analysis/")
+MSM_input_dir <- paste0(MSM_dir, "analysis/")
 
 # Phenotype lists
 pheno_list <- c(
@@ -66,7 +66,7 @@ all_contexts <- c("sex", "age", "statins")
 context_mapping <- list(
   sex      = list(clean_context = "Female vs. Male"),
   age      = list(clean_context = "Born in 1934-1951 vs. 1952-1971"),
-  statins  = list(clean_context = "Never vs. Current statin usage")
+  statins  = list(clean_context = "Non-users vs. Statin users")
 )
 
 context_list <- all_contexts
@@ -78,7 +78,7 @@ ctx_cols <- setNames(c('#156c4e', '#a796e8', '#004488'), ctx_clean)
 
 # Populations
 valid_pops <- c("white_euro", "afr", "asn")
-Ancs <- c('European', 'African', 'Asian')
+Ancs <- c('European', 'African', 'East Asian')
 names(Ancs) <- valid_pops
 
 # PGS type lists
@@ -110,7 +110,7 @@ pheno_patterns <- c(
   "HbA1c674178" = "HbA1c"
 )
 
-# BioMe phenotype dictionary
+# MSM phenotype dictionary
 pheno_dict <- c(
   alanine_aminotrans        = "Alanine_aminotrans674206",
   alkaline_phosphatase      = "Alkaline_phosphatase674206",
@@ -176,14 +176,15 @@ pheno_cleaner <- function(p) {
   p <- gsub("674178", "", p)
   p <- gsub("674206", "", p)
   p <- gsub("_", " ", p)
-  p <- str_to_sentence(p)
+  p <- str_to_sentence(p) 
+  p <- gsub("phill", "phil", p)                 
+  p <- gsub("aminotrans\\b", "aminotransferase", p)  
   p <- gsub("Apolipoprotein a", "Apolipoprotein A", p)
   p <- gsub("Apolipoprotein b", "Apolipoprotein B", p)
   p <- gsub("Bmi", "BMI", p)
   p <- gsub("Cystatin c", "Cystatin C", p)
   p <- gsub("Diastolicbp auto", "Diastolic BP", p)
-  p <- gsub("Fev1 fvc ratio", "FEV1 FVC ratio", p)
-  p <- gsub("Gamma glutamyltransferase", "Gamma glutamyltrans", p)
+  p <- gsub("Fev1 fvc ratio", "FEV1/FVC ratio", p)
   p <- gsub("Hba1c", "HbA1c", p)
   p <- gsub("Hdl", "HDL", p)
   p <- gsub("Heel bone mineral density tscore", "BMD Heel T-score", p)
@@ -208,11 +209,6 @@ read_file_safely <- function(file_path) {
 }
 
 scale_by_pgs <- function(mat, baseline) (mat / baseline) * 100
-
-avg_ivw_fn <- function(SD_mat) {
-  if (is.null(dim(SD_mat))) SD_mat <- matrix(SD_mat, ncol = 1)
-  1 / sqrt(colSums(1 / SD_mat^2, na.rm = TRUE))
-}
 
 avg_se_fn <- function(SD_mat) {
   if (is.null(dim(SD_mat))) SD_mat <- matrix(SD_mat, ncol = 1)
@@ -245,27 +241,19 @@ fmt_p <- function(p) {
 
 cor_label <- function(name, cor_res) {
   prefix <- if (nchar(name) > 0) paste0(name, " ") else ""
-  paste0(prefix, "Cor: ", round(cor_res$estimate, 2), ", pv: ", round(cor_res$p.value, 2))
+  paste0(prefix, "Cor: ", round(cor_res$estimate, 2), ", p: ", round(cor_res$p.value, 2))
 }
 
 wald_z <- function(d, sd_a, sd_b)
   2 * pnorm(-abs(mean(d, na.rm=TRUE) / (sqrt(mean(sd_a^2 + sd_b^2, na.rm=TRUE)) / sqrt(sum(!is.na(d))))))
-
-wald_z_ivw <- function(d, sd_a, sd_b) {
-  var_i <- sd_a^2 + sd_b^2
-  w <- 1 / var_i
-  w[is.na(w) | is.na(d)] <- NA
-  se_ivw <- 1 / sqrt(sum(w, na.rm = TRUE))
-  2 * pnorm(-abs(mean(d, na.rm = TRUE) / se_ivw))
-}
 
 z_test_1s <- function(d)
   2 * pnorm(-abs(mean(d, na.rm=TRUE) / (sd(d, na.rm=TRUE) / sqrt(sum(!is.na(d))))))
 
 r2diffplot <- function(data_matrix, CI25_matrix, CI75_matrix, filename,
                        meth, clean_meth, clean_phenos, clean_context, pop, context) {
-  if(pop == "BioMe"){
-    clean_pop <- "BioMe"
+  if(pop == "MSM"){
+    clean_pop <- "MSM"
     h_val <- 12
   }else{
     clean_pop <- Ancs[pop]

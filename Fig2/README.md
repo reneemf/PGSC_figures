@@ -33,4 +33,12 @@ Edit the `#SBATCH -o/-e` log paths in `run_sims.sh` for your environment.
 | `c_prob.R` | Context distribution (P(C=1)) |
 
 Each script sources `defaults.R` (parameters), `functions.R` (simulation + PGS builders), and `build_sim.R`.
-Most scripts loop over two GxC backgrounds, `gxe0` (none) and `gxenz` (nonzero); `panel_summary_plots.R` writes `panel_{A,B,C,D}_{gxe0,gxenz}.png`. 
+Most scripts loop over two GxC backgrounds, `gxe0` (none) and `gxenz` (0.05). `panel_summary_plots.R` renders panels A–D to `figs/`:
+
+| Figure(s) | Contents |
+|---|---|
+| `panel_A.png`, `panel_A_logeta.png` | R² %Change vs GxC heritability, proportion coordinated, and heteroskedasticity (zero GxC background; `_logeta` uses a log η x-axis) |
+| `panel_B.png` | Same three sweeps as absolute R² |
+| `panel_C_diff.png`, `panel_C_R2.png` | 2×4 grid — additive h², polygenicity, sample size, context imbalance — with the two GxC backgrounds as rows (R² %Change and R²) |
+| `panel_D_diff.png`, `panel_D_R2.png` | 2×4 grid — Box-Cox scaling and main effect of C (log / true / squared scales) — with the two GxC backgrounds as rows (R² %Change and R²) |
+

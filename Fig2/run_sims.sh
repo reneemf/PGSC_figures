@@ -19,7 +19,7 @@ module load R/4.3.1
 iter_idx="${SLURM_ARRAY_TASK_ID}"
 
 # h2_coord and h2_gxe: no GxC-background split
-echo "Running: Rscript h2_coord.R ${iter_ißdx}"
+echo "Running: Rscript h2_coord.R ${iter_idx}"
 Rscript h2_coord.R "${iter_idx}"
 echo "Running: Rscript h2_gxe.R ${iter_idx}"
 Rscript h2_gxe.R "${iter_idx}"
@@ -37,6 +37,8 @@ echo "Running: Rscript alpha.R ${iter_idx}"
 Rscript alpha.R "${iter_idx}"
 echo "Running: Rscript eta.R ${iter_idx}"
 Rscript eta.R "${iter_idx}"
+echo "Running: Rscript c_prob.R ${iter_idx}"
+Rscript c_prob.R "${iter_idx}"
 
 end_time=$(date +%s)
 elapsed=$((end_time - start_time))

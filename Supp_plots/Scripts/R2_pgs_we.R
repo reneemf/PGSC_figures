@@ -27,23 +27,26 @@ for(pop in valid_pops){
   r2_sort <- na.omit(pgs_r2_pv[order(as.numeric(pgs_r2_pv$pgs_r2),decreasing=F),])
 
   # r2 plot w pgs thresh
-  png(paste0("pgsR2_pvthresh_",pop,".png"), width = 10, height = 10, units = 'in', res = 300)
-  par(mai=c(1,2.5,0.5,0.5))
-  plot(x = r2_sort$pgs_r2, y = seq_along(r2_sort$pgs_r2), type = "p",
+  r2_vals <- as.numeric(r2_sort$pgs_r2)
+  png(paste0("pgsR2_pvthresh_",pop,".png"), width = 10, height = 15, units = 'in', res = 300)
+  par(mai = c(1, 2.95, 0.25, 0.25))
+  plot(x = r2_vals, y = seq_along(r2_vals), type = "p",
+       pch = ifelse(r2_vals < 0.01, 21, 16),
        col = base_cols3["pgs"],
-       xlab = paste0("PGS R\u00b2 in ", Ancs[pop] ," population"), ylab = "", yaxt = "n", pch = ifelse(as.numeric(r2_sort$pgs_r2) < 0.01, 21, 19),
-       cex.lab = 1.5, cex = 1.5,
-       xlim = range(as.numeric(r2_sort$pgs_r2)))
-  axis(2, at = seq_along(r2_sort$pgs_r2), labels = r2_sort$clean_phenos,
-       las = 1, cex.axis = 0.8)
+       xlab = paste0("PGS R\u00b2 in ", Ancs[pop], " population"), ylab = "",
+       yaxt = "n", las = 1, cex.lab = 2, cex = 1.5, cex.axis = 1.5,
+       xlim = range(r2_vals))
+  axis(2, at = seq_along(r2_vals), labels = r2_sort$clean_phenos,
+       las = 1, cex.axis = 1.3)
   abline(v = 0.01, col = "black")
+  legend('bottomright', bty = 'n', clean_context, cex = 1.5)
   if(pop == "white_euro"){
-    legend("right", bty='n', legend=c("pgs R\u00b2 < 1%", "R\u00b2 > 1%"),
-           col=base_cols3["pgs"], pch=c(21,19), cex=1.3)
+    legend("right", legend = c("R\u00b2 < 1%", "R\u00b2 > 1%"), bty = 'n',
+           col = base_cols3["pgs"], pch = c(21, 16), cex = 1.5)
   }
   dev.off()
 
   # drop list:
-  print(r2_sort[as.numeric(r2_sort$pgs_r2) < 0.01,"clean_phenos"])
+  print(r2_sort[r2_vals < 0.01, "clean_phenos"])
 
 }

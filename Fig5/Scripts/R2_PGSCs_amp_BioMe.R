@@ -10,19 +10,22 @@ context       <- context_list[1]            # just working with sex here
 clean_context <- context_mapping[[context]]$clean_context
 
 # plot pgs R2s (all phenotypes, grey if R2 < 0.01)
-png("R2_pgs_BioMe.png", width = 10, height = 10, units = 'in', res = 300)
-par(mai = c(1, 2.5, 0.5, 0.5))
-plot(x = biome_pgs_r2_all, y = seq_along(biome_pgs_r2_all),
+pgs_r2_sort <- sort(biome_pgs_r2_all, na.last = NA)
+png("R2_pgs_BioMe.png", width = 10, height = 12, units = 'in', res = 300)
+par(mai = c(1, 2.95, 0.25, 0.25))
+plot(x = pgs_r2_sort, y = seq_along(pgs_r2_sort),
+     type = "p", pch = ifelse(pgs_r2_sort < 0.01, 21, 16),
      col = base_cols["pgs"],
-     type = "p", xlab = "PGS R\u00b2 in BioMe population", ylab = "", yaxt = "n",
-     cex.lab = 1.5, cex = 1.5, cex.axis = 1, pch = ifelse(biome_pgs_r2_all < 0.01, 21, 19),
-     xlim = range(biome_pgs_r2_all))
-axis(2, at = seq_along(biome_pgs_r2_all),
-     labels = (pheno_cleaner(names(biome_pgs_r2_all))),
-     las = 1, cex.axis = 1)
+     xlab = "PGS R\u00b2 in MSM population", ylab = "",
+     yaxt = "n", las = 1, cex.lab = 2, cex = 1.5, cex.axis = 1.5,
+     xlim = range(pgs_r2_sort))
+axis(2, at = seq_along(pgs_r2_sort),
+     labels = pheno_cleaner(names(pgs_r2_sort)),
+     las = 1, cex.axis = 1.3)
 abline(v = 0.01, col = "black")
-legend("right", legend = c("R\u00b2 > 1%", "R\u00b2 < 1%"), bty = "n",
-       col = base_cols["pgs"], pch = c(19, 21), cex = 1.3)
+legend('bottomright', bty = 'n', clean_context, cex = 1.5)
+legend("right", legend = c("R\u00b2 > 1%", "R\u00b2 < 1%"), bty = 'n',
+       col = base_cols["pgs"], pch = c(16, 21), cex = 1.5)
 dev.off()
 
 # Loop over all and cropped phenotype sets

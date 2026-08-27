@@ -11,7 +11,6 @@ args <- commandArgs(trailingOnly = TRUE)
 j <- as.integer(args[1])
 
 gxe_values <- c(0, 0.05)
-#gxe_values <- c(0, 0.05, 0.1, 0.15)
 alpha_values <- c(0.05,0.1,0.2,0.5)
 LB_values <- seq(-1, 2, length = tuner)
 

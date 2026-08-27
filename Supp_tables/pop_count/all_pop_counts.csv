@@ -1,10 +1,10 @@
-"","White British train","White British test","European","African","Asian"
-"Num female",162402,18054,14393,4282,1642
-"Num male",139512,15493,10558,3204,817
-"Num individuals",301914,33547,24951,7486,2459
-"Num below mean age",169967,18774,11779,1976,745
-"Num above mean age",131947,14773,13172,5510,1714
-"Num individuals.1",301914,33547,24951,7486,2459
-"Num no statin use",252520,28131,21471,6437,2202
-"Num statin user",49394,5416,3480,1049,257
-"Num individuals.2",301914,33547,24951,7486,2459
+,White British train,White British test,European,African,East Asian
+Num female,162402,18054,14393,4282,1642
+Num male,139512,15493,10558,3204,817
+Num individuals,301914,33547,24951,7486,2459
+Num below mean age,169967,18774,11779,1976,745
+Num above mean age,131947,14773,13172,5510,1714
+Num individuals.1,301914,33547,24951,7486,2459
+Num no statin use,252520,28131,21471,6437,2202
+Num statin user,49394,5416,3480,1049,257
+Num individuals.2,301914,33547,24951,7486,2459

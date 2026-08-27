@@ -1,8 +1,6 @@
 rm(list=ls())
 source(file.path(Sys.getenv("PGSC_HOME", unset = "."), "config.R"))
 load(paste0(rdata_dir, "summ_stats.Rdata"))
-library(ggplot2)
-library(ggrepel)
 
 setwd(paste0(fig_dir, "Fig4"))
 
@@ -43,9 +41,9 @@ for (anc in valid_pops[2:3]) {
   if (anc == valid_pops[2]){
     legend("topright", legend = c("pgs","ampPGS","PGSC"), bty = "n",
            fill = base_cols3[c('pgs','ampPGS','PGSC_v_pgs')])
-    legend("topleft", legend = "(A)", bty="n", inset=c(-0.08,-0.08), xpd=TRUE)
+    legend("topleft", legend = "(a)", bty="n", inset=c(-0.08,-0.08), xpd=TRUE)
   }else{
-    legend("topleft", legend = "(B)", bty="n", inset=c(-0.08,-0.08), xpd=TRUE)
+    legend("topleft", legend = "(b)", bty="n", inset=c(-0.08,-0.08), xpd=TRUE)
   }
 }
 dev.off()
@@ -54,9 +52,9 @@ dev.off()
 png("avg_perR2diff.png", width = 10, height = 5, units = "in", res = 300)
 par(mfrow = c(1,2), mar = c(4,5,2,1))
 for (anc in valid_pops[2:3]) {
-  means    <- t(avg_R2diff_ivw[, anc, , 'delta'])
-  upper    <- t(avg_R2diff_ivw[, anc, , 'delta'] + 1.96 * avg_R2diff_ivw[, anc, , 'se'])
-  lower    <- t(avg_R2diff_ivw[, anc, , 'delta'] - 1.96 * avg_R2diff_ivw[, anc, , 'se'])
+  means    <- t(avg_R2diff[, anc, , 'delta'])
+  upper    <- t(avg_R2diff[, anc, , 'delta'] + 1.96 * avg_R2diff[, anc, , 'se'])
+  lower    <- t(avg_R2diff[, anc, , 'delta'] - 1.96 * avg_R2diff[, anc, , 'se'])
   ylim_use <- range(lower, upper) + c(-0.5, 1)
   bp <- barplot(means, beside = TRUE, col = c(base_cols3['ampPGS'], base_cols3['PGSC_v_pgs']),
                 las = 1, ylim = ylim_use, names.arg = c("Sex","Age","Statins"),
@@ -71,14 +69,14 @@ for (anc in valid_pops[2:3]) {
     segments(x_amp,  brk_y, x_pgsc, brk_y)
     segments(x_amp,  brk_y, x_amp,  brk_y - tick_len)
     segments(x_pgsc, brk_y, x_pgsc, brk_y - tick_len)
-    text(mean(c(x_amp, x_pgsc)), brk_y + 0.3, fmt_p(pval_R2diff_ivw[context_list[ctx_i], anc]), cex = 1)
+    text(mean(c(x_amp, x_pgsc)), brk_y + 0.3, fmt_p(pval_R2diff[context_list[ctx_i], anc]), cex = 1)
   }
   if (anc == valid_pops[2]){
-    legend("topleft", legend = "(A)", bty="n", inset=c(-0.08,-0.1), xpd=TRUE)
+    legend("topleft", legend = "(a)", bty="n", inset=c(-0.08,-0.1), xpd=TRUE)
   }else{
     legend("right", legend = c("ampPGS","PGSC"), bty = "n",
            fill = c(base_cols3['ampPGS'], base_cols3['PGSC_v_pgs']))
-    legend("topleft", legend = "(B)", bty="n", inset=c(-0.08,-0.1), xpd=TRUE)
+    legend("topleft", legend = "(b)", bty="n", inset=c(-0.08,-0.1), xpd=TRUE)
   }
 }
 dev.off()

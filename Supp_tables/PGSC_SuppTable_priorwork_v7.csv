@@ -1,0 +1,11 @@
+Paper,GxC model,Method,Data,Phenos,Contexts,GxC claim,Cross-ancestry,Scale robust
+Zhu 2023,Locus-specific,mash-based,UKB,27,1,prediction [1],,
+Weine 2025,Locus-specific,mash-based,simulations,,,prediction [1],,
+Hui 2025,Locus-specific,unnamed,UKB,1,1,prediction [2],,
+Jayasinghe 2025,Locus-specific,GxEprs,UKB,13,9,prediction [3],,
+Namba 2026,Locus-specific,GxEprs,UKB; BBJ; others,18,4,prediction [3],yes,
+Westerman 2026,Locus-specific,iPGS,UKB; AoU,20,1,detection,yes,
+This paper,Locus-specific,PGSC,UKB; MSM,48,3,prediction,yes,yes
+Many [4],Amplification,PGSxC,various,,,detection,,
+Nagpal 2026,Amplification,PGSxC,UKB; AoU for CAD,7,75,detection [5],,
+This paper,Amplification,ampPGS,UKB; MSM,48,3,prediction,yes,no

@@ -179,53 +179,6 @@ for (anc in valid_pops[2:3]) {
   }
 }
 
-# avg_R2diff_ivw & pval_R2diff_ivw
-avg_R2diff_ivw  <- array(NA, dimnames = list(context_list, valid_pops[2:3], c("ampPGS","PGSC"), c('delta','se')),
-                         dim = c(3, 2, 2, 2))
-pval_R2diff_ivw <- array(NA, dimnames = list(context_list, valid_pops[2:3]), dim = c(3, 2))
-
-for (anc in valid_pops[2:3]) {
-  for (context in context_list) {
-    keep          <- which(pgs_r2_arr[, context, anc] > 0.01)
-    anc_amp_diff  <- per_diff_r2_arr[keep, 'ampPGS',     context, anc]
-    anc_pgsc_diff <- per_diff_r2_arr[keep, 'PGSC_v_pgs', context, anc]
-    anc_amp_sd    <- SD_pct_arr[keep,      'ampPGS',     context, anc]
-    anc_pgsc_sd   <- SD_pct_arr[keep,      'PGSC_v_pgs', context, anc]
-    avg_R2diff_ivw[context, anc, 'ampPGS', 'delta'] <- mean(anc_amp_diff,  na.rm=TRUE)
-    avg_R2diff_ivw[context, anc, 'PGSC',   'delta'] <- mean(anc_pgsc_diff, na.rm=TRUE)
-    avg_R2diff_ivw[context, anc, 'ampPGS', 'se']    <- avg_ivw_fn(anc_amp_sd)
-    avg_R2diff_ivw[context, anc, 'PGSC',   'se']    <- avg_ivw_fn(anc_pgsc_sd)
-    pval_R2diff_ivw[context, anc] <- wald_z_ivw(anc_pgsc_diff - anc_amp_diff, anc_pgsc_sd, anc_amp_sd)
-  }
-}
-
-# avg_port_ivw & pval_port_ivw
-avg_port_ivw  <- array(NA, dimnames = list(context_list, valid_pops[2:3], c("pgs","ampPGS","PGSC"), c("mean","se")),
-                       dim = c(3, 2, 3, 2))
-pval_port_ivw <- array(NA, dimnames = list(context_list, valid_pops[2:3], c("pgs_amp","pgs_pgsc","amp_pgsc")),
-                       dim = c(3, 2, 3))
-
-for (anc in valid_pops[2:3]) {
-  for (context in context_list) {
-    pheno_loc     <- plot_phenos[which(output_valid[plot_phenos, 'pgs', 'r2', context, anc] > 0.01)]
-    anc_pgs_port  <- output_valid[pheno_loc, 'pgs',        'r2', context, anc] / output_valid[pheno_loc, 'pgs',        'r2', context, valid_pops[1]]
-    anc_amp_port  <- output_valid[pheno_loc, 'ampPGS',     'r2', context, anc] / output_valid[pheno_loc, 'ampPGS',     'r2', context, valid_pops[1]]
-    anc_pgsc_port <- output_valid[pheno_loc, 'PGSC_v_pgs', 'r2', context, anc] / output_valid[pheno_loc, 'PGSC_v_pgs', 'r2', context, valid_pops[1]]
-    anc_pgs_sd    <- output_valid[pheno_loc, 'pgs',        'sd', context, anc]
-    anc_amp_sd    <- output_valid[pheno_loc, 'ampPGS',     'sd', context, anc]
-    anc_pgsc_sd   <- output_valid[pheno_loc, 'PGSC_v_pgs', 'sd', context, anc]
-    avg_port_ivw[context, anc, 'pgs',    'mean'] <- mean(anc_pgs_port,  na.rm=TRUE)
-    avg_port_ivw[context, anc, 'ampPGS', 'mean'] <- mean(anc_amp_port,  na.rm=TRUE)
-    avg_port_ivw[context, anc, 'PGSC',   'mean'] <- mean(anc_pgsc_port, na.rm=TRUE)
-    avg_port_ivw[context, anc, 'pgs',    'se']   <- avg_ivw_fn(anc_pgs_sd)
-    avg_port_ivw[context, anc, 'ampPGS', 'se']   <- avg_ivw_fn(anc_amp_sd)
-    avg_port_ivw[context, anc, 'PGSC',   'se']   <- avg_ivw_fn(anc_pgsc_sd)
-    pval_port_ivw[context, anc, 'pgs_amp']  <- wald_z_ivw(anc_pgs_port  - anc_amp_port,  anc_pgs_sd, anc_amp_sd)
-    pval_port_ivw[context, anc, 'pgs_pgsc'] <- wald_z_ivw(anc_pgs_port  - anc_pgsc_port, anc_pgs_sd, anc_pgsc_sd)
-    pval_port_ivw[context, anc, 'amp_pgsc'] <- wald_z_ivw(anc_amp_port  - anc_pgsc_port, anc_amp_sd, anc_pgsc_sd)
-  }
-}
-
 # port_gain_arr & labeled_df
 all_phenos <- unique(unlist(lapply(valid_pops[2:3], function(anc)
   lapply(context_list, function(ctx)
@@ -368,10 +321,8 @@ save(
   context_summary, pvals_vs0,
   # avg R2% change
   avg_R2diff, pval_R2diff,
-  avg_R2diff_ivw, pval_R2diff_ivw,
   # avg portability
   avg_port, pval_port,
-  avg_port_ivw, pval_port_ivw,
   # per-pheno portability gain & scatter data
   port_gain_arr, labeled_df,
   # BioMe stats
@@ -387,7 +338,7 @@ save(
 
 # Part 4: Supplementary CSV tables
 setwd(paste0(fig_dir, "Supp_tables/summ_stats/"))
-alt_pgs_tbl <- type_list_valid[c(1,3:4)]
+alt_pgs_tbl <- alt_pgs3
 
 # Read per-phenotype misc stats (white_euro only): c_effect and pgs_gxc_cor
 # c_effect    = standardized main effect of context C on scaled phenotype

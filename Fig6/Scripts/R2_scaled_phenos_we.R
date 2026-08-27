@@ -6,23 +6,6 @@ setwd(paste0(fig_dir, "Fig6"))
 alt_pgs   <- alt_pgs2[1:2]          # ampPGS, PGSC_v_pgs
 base_cols <- base_cols3[alt_pgs]
 
-mini_specs <- list(
-  sex = list(
-    phenos = c("Testosterone_0","Testosterone674178","Height_0","Height674178"),
-    file   = "R2diff_mini_scaled_sex.png",
-    mai    = c(1, 2, 0.25, 0.25),
-    ax_idx = c(1, 2, 9, 10)
-  ),
-  statins = list(
-    phenos = c("HbA1c_0","HbA1c674178","Apolipoprotein_a_0","Apolipoprotein_a674206"),
-    file   = "R2diff_mini_scaled_statins.png",
-    mai    = c(1, 2.5, 0.25, 0.25),
-    ax_idx = c(13, 14, 21, 22)
-  )
-)
-
-ctx_results <- list()
-
 for(context in context_list) {
   base_r2  <- output_valid[scale_list, "pgs", "r2", context, "white_euro"]
   ampPGS_r2 <- as.data.frame(output_valid[scale_list, "ampPGS", "r2", context, "white_euro"])
