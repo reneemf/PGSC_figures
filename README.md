@@ -2,7 +2,7 @@
 
 Scripts to reproduce the figures in the PGSC manuscript.
 
-📄 **Manuscript:** [TITLE](MANUSCRIPT_URL) 
+📄 **Manuscript:** [Locus-specific gene-context interactions improve polygenic prediction](https://doi.org/10.64898/2026.08.26.746823) 
 
 The pipeline that builds the underlying scores (GXC GWAS, PGSC, bootstrapped R², etc.) is in the companion method repository [here](https://github.com/reneemf/PGSC).
 
